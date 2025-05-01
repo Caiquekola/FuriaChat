@@ -10,7 +10,7 @@ const ChatHeader: React.FC = () => {
         </h2>
         <div className="ml-3 px-3 py-1 bg-primary/20 rounded-full flex items-center">
           <Users size={14} className="mr-1" />
-          <span className="text-sm text-primary">142 online</span>
+          <span className="text-sm text-primary">234 online</span>
         </div>
       </div>
       <div className="flex items-center space-x-2">

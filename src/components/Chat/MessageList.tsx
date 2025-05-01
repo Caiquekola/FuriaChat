@@ -15,12 +15,14 @@ const MessageList: React.FC<MessageListProps> = ({
 }) => {
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4">
-      {messages.map((message) => (
-        <MessageItem 
-          key={message.id} 
-          message={message} 
-          isOwnMessage={message.sender.id === currentUser.id} 
-        />
+      {messages
+       .filter((msg): msg is Message => !!msg?.id && !!msg?.sender?.id)
+       .map((message) => (
+         <MessageItem 
+           key={message.id} 
+           message={message} 
+           isOwnMessage={message.sender.id === currentUser.id} 
+         />
       ))}
       <div ref={endOfMessagesRef} />
     </div>

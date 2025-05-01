@@ -6,7 +6,7 @@ import { Message, User } from '../../types';
 import { websocketService } from '../../services/websocket';
 
 const Chat: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(() => []);
   const [currentUser] = useState<User>({
     id: 'user1',
     username: 'FuriaFan123',
@@ -21,7 +21,7 @@ const Chat: React.FC = () => {
     websocketService.connect();
 
     // Load initial messages
-    fetch('https://localhost:8080/api/messages')
+    fetch('http://localhost:8080/api/messages')
       .then(response => response.json())
       .then(data => setMessages(data));
 

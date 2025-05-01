@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, X, MessageSquare, Trophy, Calendar, User } from 'lucide-react';
-import furiaLogo from '../assets/furia-logo';
+import furiaLogo from '../assets/Furia_Esports_logo.png';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,9 +13,12 @@ const Navbar: React.FC = () => {
     <nav className="bg-background-light py-4 px-6 shadow-md sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center">
-          <div className="h-10 w-10 mr-3" dangerouslySetInnerHTML={{ __html: furiaLogo }} />
-          <h1 className="text-2xl font-bold text-white">
-            FURIA <span className="text-primary glow">FAN CHAT</span>
+          <div className="h-10 w-10 mr-3">
+            <img src={furiaLogo} alt="FURIA Logo" className="h-full w-full" />
+          </div>
+          {/* Logo and Title */}
+          <h1 className="text-2xl font-bold text-white glow">
+            FURIA <span className="text-primary text-gray ">FAN CHAT</span>
           </h1>
         </div>
 

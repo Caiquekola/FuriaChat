@@ -17,9 +17,21 @@ const GameStatus: React.FC = () => {
 
     // Load initial game status
     fetch('http://localhost:8080/api/game/status')
-      .then(response => response.json())
-      .then(data => setLiveMatch(data));
-
+    .then(res => {
+      if (!res.ok) throw new Error('Erro HTTP: ' + res.status);
+      return res.text();
+    })
+    .then(text => {
+      if (!text) {
+        console.log("Resposta vazia");
+        return;
+      }
+  
+      const data = JSON.parse(text);
+      setLiveMatch(data);
+    })
+    .catch(error => console.error("Erro ao carregar o status do jogo:", error));
+  
     // Subscribe to game status updates
     const unsubscribe = websocketService.onGameStatus((status) => {
       setLiveMatch(status);
@@ -39,22 +51,22 @@ const GameStatus: React.FC = () => {
       <div className="p-4 border-b border-primary/20">
         <h2 className="text-xl font-semibold">Matches</h2>
         <div className="flex mt-3 border-b border-primary/10">
-          <TabButton 
-            active={activeTab === 'live'} 
+          <TabButton
+            active={activeTab === 'live'}
             onClick={() => setActiveTab('live')}
             icon={<Trophy size={16} />}
             label="Live Match"
             showBadge={liveMatch !== null}
           />
-          <TabButton 
-            active={activeTab === 'upcoming'} 
+          <TabButton
+            active={activeTab === 'upcoming'}
             onClick={() => setActiveTab('upcoming')}
             icon={<Calendar size={16} />}
             label="Upcoming"
           />
         </div>
       </div>
-      
+
       <div className="flex-1 overflow-y-auto">
         {activeTab === 'live' ? (
           liveMatch ? (
@@ -62,7 +74,7 @@ const GameStatus: React.FC = () => {
           ) : (
             <div className="flex flex-col items-center justify-center h-full p-6 text-center">
               <div className="text-text-secondary mb-2">No live matches right now</div>
-              <button 
+              <button
                 className="mt-3 px-4 py-2 bg-primary/20 hover:bg-primary/30 rounded-lg text-primary transition-colors duration-300"
                 onClick={() => setActiveTab('upcoming')}
               >
@@ -86,20 +98,19 @@ interface TabButtonProps {
   showBadge?: boolean;
 }
 
-const TabButton: React.FC<TabButtonProps> = ({ 
-  active, 
-  onClick, 
-  icon, 
-  label, 
-  showBadge = false 
+const TabButton: React.FC<TabButtonProps> = ({
+  active,
+  onClick,
+  icon,
+  label,
+  showBadge = false
 }) => {
   return (
     <button
-      className={`flex items-center px-4 py-2 relative ${
-        active 
-          ? 'text-primary border-b-2 border-primary' 
-          : 'text-text-secondary hover:text-text'
-      } transition-colors duration-300`}
+      className={`flex items-center px-4 py-2 relative ${active
+        ? 'text-primary border-b-2 border-primary'
+        : 'text-text-secondary hover:text-text'
+        } transition-colors duration-300`}
       onClick={onClick}
     >
       <span className="mr-2">{icon}</span>

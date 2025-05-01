@@ -2,7 +2,7 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { Message, Match } from '../types';
 
-const SOCKET_URL = 'https://localhost:8080/ws';
+const SOCKET_URL = 'http://localhost:8080/ws';
 const CHAT_TOPIC = '/topic/messages';
 const GAME_STATUS_TOPIC = '/topic/game-status';
 
@@ -20,6 +20,7 @@ class WebSocketService {
       },
       onDisconnect: () => {
         console.log('Disconnected from WebSocket');
+        setTimeout(() => this.client.activate(), 2000); // Reconnect after 5 seconds  
       },
       onStompError: (frame) => {
         console.error('WebSocket error:', frame);
@@ -38,6 +39,13 @@ class WebSocketService {
   private subscribeToTopics() {
     this.client.subscribe(CHAT_TOPIC, (message) => {
       const chatMessage = JSON.parse(message.body);
+
+      // Validação para garantir que tem id
+      if (!chatMessage || !chatMessage.id || !chatMessage.sender || !chatMessage.sender.id) {
+        console.warn("Mensagem inválida recebida do servidor", chatMessage);
+        return;
+      }
+      
       this.messageHandlers.forEach(handler => handler(chatMessage));
     });
 
@@ -45,7 +53,8 @@ class WebSocketService {
       const gameStatus = JSON.parse(message.body);
       this.gameStatusHandlers.forEach(handler => handler(gameStatus));
     });
-  }
+}
+
 
   sendMessage(message: Partial<Message>) {
     this.client.publish({

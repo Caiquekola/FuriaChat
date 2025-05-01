@@ -8,6 +8,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +20,9 @@ public class ChatController {
     @MessageMapping("/chat")
     @SendTo("/topic/messages")
     public ChatMessage handleMessage(ChatMessage message) {
+        if(message.getId() == null) {
+            message.setId(UUID.randomUUID().toString());
+        }
         return chatService.saveAndBroadcast(message);
     }
 

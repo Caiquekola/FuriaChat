@@ -1,5 +1,3 @@
-import React from 'react';
-import { LayoutDashboard } from 'lucide-react';
 import Layout from './components/Layout';
 import Chat from './components/Chat/Chat';
 import GameStatus from './components/GameStatus/GameStatus';
