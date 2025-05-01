@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary: #00A6FB;
+  --primary-dark: #0077B6;
+  --accent: #FF5733;
+  --background: #0A0E17;
+  --background-light: #1A1E2E;
+  --text: #F0F2F5;
+  --text-secondary: #A0A8B8;
+  --success: #4ADE80;
+  --warning: #FBBF24;
+  --error: #F87171;
+}
+
+body {
+  font-family: 'Rajdhani', sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-dark);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+.glow {
+  text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+}
+
+.neon-border {
+  box-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary-dark);
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}

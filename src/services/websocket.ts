@@ -1,0 +1,72 @@
+import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+import { Message, Match } from '../types';
+
+const SOCKET_URL = 'https://localhost:8080/ws';
+const CHAT_TOPIC = '/topic/messages';
+const GAME_STATUS_TOPIC = '/topic/game-status';
+
+class WebSocketService {
+  private client: Client;
+  private messageHandlers: ((message: Message) => void)[] = [];
+  private gameStatusHandlers: ((status: Match) => void)[] = [];
+
+  constructor() {
+    this.client = new Client({
+      webSocketFactory: () => new SockJS(SOCKET_URL),
+      onConnect: () => {
+        console.log('Connected to WebSocket');
+        this.subscribeToTopics();
+      },
+      onDisconnect: () => {
+        console.log('Disconnected from WebSocket');
+      },
+      onStompError: (frame) => {
+        console.error('WebSocket error:', frame);
+      }
+    });
+  }
+
+  connect() {
+    this.client.activate();
+  }
+
+  disconnect() {
+    this.client.deactivate();
+  }
+
+  private subscribeToTopics() {
+    this.client.subscribe(CHAT_TOPIC, (message) => {
+      const chatMessage = JSON.parse(message.body);
+      this.messageHandlers.forEach(handler => handler(chatMessage));
+    });
+
+    this.client.subscribe(GAME_STATUS_TOPIC, (message) => {
+      const gameStatus = JSON.parse(message.body);
+      this.gameStatusHandlers.forEach(handler => handler(gameStatus));
+    });
+  }
+
+  sendMessage(message: Partial<Message>) {
+    this.client.publish({
+      destination: '/app/chat',
+      body: JSON.stringify(message)
+    });
+  }
+
+  onMessage(handler: (message: Message) => void) {
+    this.messageHandlers.push(handler);
+    return () => {
+      this.messageHandlers = this.messageHandlers.filter(h => h !== handler);
+    };
+  }
+
+  onGameStatus(handler: (status: Match) => void) {
+    this.gameStatusHandlers.push(handler);
+    return () => {
+      this.gameStatusHandlers = this.gameStatusHandlers.filter(h => h !== handler);
+    };
+  }
+}
+
+export const websocketService = new WebSocketService();
