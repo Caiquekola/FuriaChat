@@ -40,20 +40,32 @@ class WebSocketService {
     this.client.subscribe(CHAT_TOPIC, (message) => {
       const chatMessage = JSON.parse(message.body);
 
-      // Validação para garantir que tem id
-      if (!chatMessage || !chatMessage.id || !chatMessage.sender || !chatMessage.sender.id) {
-        console.warn("Mensagem inválida recebida do servidor", chatMessage);
+      const formattedMessage: Message = {
+        ...chatMessage,
+        sender: {
+          id: chatMessage.senderId || "unknown",
+          username: chatMessage.senderUsername || "Usuário desconhecido",
+          avatar: chatMessage.senderAvatar || ""
+        },
+        timestamp: (chatMessage.timestamp && !isNaN(new Date(chatMessage.timestamp).getTime()))
+          ? new Date(chatMessage.timestamp)
+          : new Date()
+      };
+
+      if (!formattedMessage.id) {
+        console.warn("Mensagem inválida recebida do servidor", formattedMessage);
         return;
       }
-      
-      this.messageHandlers.forEach(handler => handler(chatMessage));
+
+      this.messageHandlers.forEach(handler => handler(formattedMessage));
     });
 
     this.client.subscribe(GAME_STATUS_TOPIC, (message) => {
       const gameStatus = JSON.parse(message.body);
       this.gameStatusHandlers.forEach(handler => handler(gameStatus));
     });
-}
+  }
+
 
 
   sendMessage(message: Partial<Message>) {
