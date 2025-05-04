@@ -20,52 +20,72 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     let isMounted = true;
-    
-    const fetchMessages = async (): Promise<Message[]> => {
+    const controller = new AbortController();
+  
+    const fetchMessages = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/messages`);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/messages`, {
+          signal: controller.signal
+        });
+        
         if (!response.ok) throw new Error('Erro ao carregar mensagens');
-        return await response.json();
+        
+        const data = await response.json();
+        if (isMounted) {
+          setMessages(data.filter((msg: any) => {
+            const isValid = msg?.id && msg?.content && msg?.sender?.id;
+            if (!isValid) console.warn('Mensagem inválida ignorada:', msg);
+            return isValid;
+          }));
+        }
       } catch (error) {
-        console.error("Erro ao carregar mensagens iniciais:", error);
-        return [];
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Erro ao carregar mensagens:', error);
+        }
       }
     };
   
-    const handleNewMessage = (message: Message) => {
+    const handleNewMessage = (message: any) => {
       if (!isMounted) return;
       
+      // Verificação simplificada
+      if (!message?.id || !message?.content || !message?.sender?.id) {
+        console.warn('Mensagem inválida recebida:', message);
+        return;
+      }
+  
       setMessages(prev => {
-        // Evita duplicação de mensagens
+        // Previne duplicatas
         if (prev.some(m => m.id === message.id)) return prev;
-        return [...prev, message];
+        
+        // Formatação garantida
+        const formattedMsg = {
+          ...message,
+          sender: {
+            id: message.sender.id,
+            username: message.sender.username || 'Anônimo',
+            avatar: message.sender.avatar || 'https://i.pravatar.cc/150?u=unknown',
+            isAdmin: Boolean(message.sender.isAdmin)
+          },
+          timestamp: message.timestamp ? new Date(message.timestamp) : new Date()
+        };
+        
+        return [...prev, formattedMsg];
       });
     };
   
-    const initializeChat = async () => {
-      try {
-        // 1. Carrega mensagens iniciais
-        const messages = await fetchMessages();
-        if (isMounted) setMessages(messages);
-        
-        // 2. Conecta ao WebSocket
-        websocketService.connect();
-        
-        // 3. Registra handler de mensagens
-        return websocketService.onMessage(handleNewMessage);
-      } catch (error) {
-        console.error("Erro na inicialização do chat:", error);
-      }
-    };
+    // Conexão WebSocket
+    websocketService.connect();
+    const unsubscribe = websocketService.onMessage(handleNewMessage);
   
-    const cleanupPromise = initializeChat();
+    // Carrega mensagens iniciais
+    fetchMessages();
   
     return () => {
       isMounted = false;
-      cleanupPromise.then(unsubscribe => {
-        unsubscribe?.();
-        websocketService.disconnect();
-      });
+      controller.abort();
+      unsubscribe();
+      websocketService.disconnect();
     };
   }, []);
 

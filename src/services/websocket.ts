@@ -44,20 +44,25 @@ class WebSocketService {
   private subscribeToTopics() {
     this.client.subscribe(CHAT_TOPIC, (message) => {
       try {
-        const parsedMessage = JSON.parse(message.body);
-        const validatedMessage = this.validateMessage(parsedMessage);
-        this.messageHandlers.forEach(handler => handler(validatedMessage));
+        const parsed = JSON.parse(message.body);
+        
+        // Formatação mínima garantida
+        const formatted: Message = {
+          id: parsed.id || `temp-${Date.now()}`,
+          content: parsed.content || '[Mensagem sem conteúdo]',
+          sender: {
+            id: parsed.sender?.id || 'unknown',
+            username: parsed.sender?.username || 'Usuário',
+            avatar: parsed.sender?.avatar || '',
+            isAdmin: Boolean(parsed.sender?.isAdmin)
+          },
+          timestamp: parsed.timestamp ? new Date(parsed.timestamp) : new Date(),
+          reactions: Array.isArray(parsed.reactions) ? parsed.reactions : []
+        };
+        
+        this.messageHandlers.forEach(h => h(formatted));
       } catch (error) {
-        console.error('Error processing message:', error);
-      }
-    });
-
-    this.client.subscribe(GAME_STATUS_TOPIC, (message) => {
-      try {
-        const status = JSON.parse(message.body);
-        this.gameStatusHandlers.forEach(handler => handler(status));
-      } catch (error) {
-        console.error('Error processing game status:', error);
+        console.error('Erro ao processar mensagem:', error, message.body);
       }
     });
   }
