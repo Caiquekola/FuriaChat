@@ -4,16 +4,18 @@ import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { Message, User } from '../../types';
 import { websocketService } from '../../services/websocket';
+import { useAuth } from '../Contexts/AuthContext';
+
+export interface MessageInputProps {
+  onSendMessage: (content: string) => void;
+  onRequireLogin: () => void;
+  currentUser: User | null; // Added currentUser to the props
+}
 
 const Chat: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>(() => []);
-  const [currentUser] = useState<User>({
-    id: 'user1',
-    username: 'FuriaFan123',
-    avatar: 'https://i.pravatar.cc/150?img=1',
-    isAdmin: false
-  });
-
+  const [messages, setMessages] = useState<Message[]>([]);
+  const { user: currentUser } = useAuth();
+  const [authOpen, setAuthOpen] = useState(false);
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,10 +33,10 @@ const Chat: React.FC = () => {
         console.warn("Mensagem inválida recebida do websocket:", message);
         return;
       }
-    
+
       setMessages(prev => [...prev, message]);
     });
-    
+
 
     return () => {
       unsubscribe();
@@ -51,7 +53,7 @@ const Chat: React.FC = () => {
   };
 
   const sendMessage = (content: string) => {
-    if (!content.trim()) return;
+    if (!content.trim() || !currentUser) return;
 
     const message: Partial<Message> = {
       content,
@@ -65,16 +67,19 @@ const Chat: React.FC = () => {
 
   return (
     <div className="flex flex-col h-[calc(100vh-14rem)] bg-background-light rounded-lg overflow-hidden border border-primary/20 neon-border">
-      <ChatHeader onlineUsers={new Set(messages.map(msg => msg.sender.id)).size}/>
+      <ChatHeader onlineUsers={new Set(messages.filter(msg => msg?.sender?.id).map(msg => msg.sender.id)).size} />
       
-      <MessageList 
-        messages={messages.filter(msg => msg && msg.id)} 
-        currentUser={currentUser} 
+
+      <MessageList
+        messages={messages.filter(msg => msg && msg.id)}
+        currentUser={currentUser}
         endOfMessagesRef={endOfMessagesRef}
       />
-      
-      <MessageInput 
-        onSendMessage={sendMessage} 
+
+      <MessageInput
+        currentUser={currentUser}
+        onSendMessage={sendMessage}
+        onRequireLogin={() => setAuthOpen(true)} // Aqui abre o AuthModal
       />
     </div>
   );

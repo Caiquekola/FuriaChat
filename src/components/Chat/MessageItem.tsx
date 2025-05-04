@@ -23,8 +23,8 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isOwnMessage }) => {
         {/* Avatar */}
         <div className="flex-shrink-0">
           <img 
-            src={message.sender.avatar} 
-            alt={message.sender.username} 
+            src={message.sender.avatar || "https://i.pravatar.cc/150?u=default"} 
+            alt={message.sender.username || "Usuário"} 
             className={`h-8 w-8 rounded-full ${message.sender.isAdmin ? 'ring-2 ring-accent' : ''}`}
           />
         </div>
@@ -43,7 +43,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isOwnMessage }) => {
                 message.sender.isAdmin ? 'text-accent' : 'text-primary'
               }`}
             >
-              {message.sender.username}
+              {message.sender.username || "Usuário"}
             </span>
             <span className="text-text-secondary text-xs ml-2 flex items-center">
               <Clock size={10} className="mr-1" />

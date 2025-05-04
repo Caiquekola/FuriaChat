@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Menu, X, MessageSquare, Trophy, Calendar, User } from 'lucide-react';
 import furiaLogo from '../assets/Furia_Esports_logo.png';
-import AuthModal from './AuthModal';
-import ProfileModal from './ProfileModal';
+import AuthModal from './Modal/AuthModal';
+import ProfileModal from './Modal/ProfileModal';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

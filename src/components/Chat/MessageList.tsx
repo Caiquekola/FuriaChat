@@ -4,7 +4,7 @@ import { Message, User } from '../../types';
 
 interface MessageListProps {
   messages: Message[];
-  currentUser: User;
+  currentUser: User | null;
   endOfMessagesRef: RefObject<HTMLDivElement>;
 }
 
@@ -21,7 +21,7 @@ const MessageList: React.FC<MessageListProps> = ({
          <MessageItem 
            key={message.id} 
            message={message} 
-           isOwnMessage={message.sender.id === currentUser.id} 
+           isOwnMessage={currentUser ? message.sender.id === currentUser.id : false} 
          />
       ))}
       <div ref={endOfMessagesRef} />
