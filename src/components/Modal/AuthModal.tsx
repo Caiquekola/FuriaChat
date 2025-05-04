@@ -9,23 +9,24 @@ interface AuthModalProps {
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin  }) => {
   const [username, setUsername] = useState('');
-  const { setUser } = useAuth();
+  const { login } = useAuth();
 
   const handleRegister = () => {
     if (!username.trim()) return;
 
     const randomAvatarId = Math.floor(Math.random() * 70) + 1;
     const avatar = `https://i.pravatar.cc/150?img=${randomAvatarId}`;
-    const newUser = {
+    login({
       id: `user-${Date.now()}`,
       username,
       avatar,
-      isAdmin: false,
-    };
+    });
 
-    setUser(newUser);
+    onLogin(username, avatar); // Call the onLogin function passed as prop
     onClose();
   };
+
+  if(!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

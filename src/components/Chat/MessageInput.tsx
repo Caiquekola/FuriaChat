@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { Send, Smile, Paperclip } from 'lucide-react';
-import { useAuth } from '../Contexts/AuthContext';
-import AuthModal from '../Modal/AuthModal';
 import { User } from '../../types'; // Adjust the import path as necessary
 
 interface MessageInputProps {
   onSendMessage: (content: string) => void;
-  currentUser: User | any; // Consider using a more specific type instead of 'any'
+  currentUser: User | null; // Consider using a more specific type instead of 'any'
   onRequireLogin: () => void;
 }
 
@@ -16,7 +14,6 @@ const MessageInput: React.FC<MessageInputProps> = ({
   onRequireLogin 
 }) => {
   const [message, setMessage] = useState('');
-  const [isAuthModalOpen, setAuthModalOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

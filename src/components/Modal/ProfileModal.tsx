@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModalBase from './ModalBase';
+import { useAuth } from '../Contexts/AuthContext'; // Ajuste o caminho conforme necessário
 
 interface ProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: {
-    username: string | '';
-    avatar: string;
-  } | null;
   onSave: (username: string, avatar: string) => void;
 }
 
-const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, user, onSave }) => {
-  const [username, setUsername] = useState(user?.username);
-  const [avatar, setAvatar] = useState(user?.avatar);
+const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, onSave }) => {
+  const { updateUser,user } = useAuth();
+  const [username, setUsername] = useState(user?.username || '');
+  const [avatar, setAvatar] = useState(user?.avatar || '');
+
+  // Atualiza os estados locais quando o user do contexto muda
+  
 
   const handleSave = () => {
-    onSave(username || '', avatar || '');
+    updateUser({ username, avatar });
     onClose();
   };
 

@@ -3,10 +3,11 @@ import { Menu, X, MessageSquare, Trophy, Calendar, User } from 'lucide-react';
 import furiaLogo from '../assets/Furia_Esports_logo.png';
 import AuthModal from './Modal/AuthModal';
 import ProfileModal from './Modal/ProfileModal';
+import { useAuth } from './Contexts/AuthContext';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState<{ username: string; avatar: string } | null>(null);
+  const { user, logout, isAuthenticated, updateUser } = useAuth();
   const [isAuthOpen, setAuthOpen] = useState(false);
   const [isProfileOpen, setProfileOpen] = useState(false);
 
@@ -50,6 +51,9 @@ const Navbar: React.FC = () => {
               {user.username}
             </button>
           )}
+          <button onClick={logout} disabled={!isAuthenticated}>
+            Sair
+          </button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -90,14 +94,20 @@ const Navbar: React.FC = () => {
         </div>
       )}
       {/* Modals */}
-      <AuthModal isOpen={isAuthOpen} onClose={() => setAuthOpen(false)} onLogin={(username, avatar) => {
-        setUser({ username, avatar });
-        setAuthOpen(false);
-      }} />
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setAuthOpen(false)}
+        onLogin={() => setAuthOpen(false)} // Só fecha o modal, o AuthModal já cuida do login
+      />
 
-      <ProfileModal isOpen={isProfileOpen} onClose={() => setProfileOpen(false)} user={user} onSave={(username, avatar) => {
-        setUser({ username, avatar });
-      }} />
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setProfileOpen(false)}
+        onSave={(username, avatar) => {
+          // Atualiza o contexto diretamente
+          updateUser({ username, avatar });
+        }}
+      />
 
     </nav>
 
