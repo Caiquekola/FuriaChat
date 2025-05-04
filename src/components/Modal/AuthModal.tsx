@@ -8,7 +8,7 @@ interface AuthModalProps {
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose  }) => {
   const [username, setUsername] = useState('');
-  const { login } = useAuth();
+  const { login, user: currentUser } = useAuth();
 
   const handleRegister = () => {
     if (!username.trim()) return;

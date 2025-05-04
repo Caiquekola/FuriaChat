@@ -51,9 +51,14 @@ const Navbar: React.FC = () => {
               {user.username}
             </button>
           )}
-          <button onClick={logout} disabled={!isAuthenticated}>
-            Sair
-          </button>
+          {isAuthenticated && (
+            <button
+              onClick={logout}
+              className="text-white hover:text-red-400 ml-4 transition-colors duration-300"
+            >
+              Sair
+            </button>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
