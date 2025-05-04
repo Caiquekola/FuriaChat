@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import { Menu, X, MessageSquare, Trophy, Calendar, User } from 'lucide-react';
 import furiaLogo from '../assets/Furia_Esports_logo.png';
+import AuthModal from './AuthModal';
+import ProfileModal from './ProfileModal';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState<{ username: string; avatar: string } | null>(null);
+  const [isAuthOpen, setAuthOpen] = useState(false);
+  const [isProfileOpen, setProfileOpen] = useState(false);
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -27,10 +33,23 @@ const Navbar: React.FC = () => {
           <NavItem icon={<MessageSquare size={18} />} text="Chat" />
           <NavItem icon={<Trophy size={18} />} text="Matches" />
           <NavItem icon={<Calendar size={18} />} text="Schedule" />
-          <button className="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-md transition-colors duration-300 flex items-center">
-            <User size={18} className="mr-2" />
-            Login
-          </button>
+          {!user ? (
+            <button
+              onClick={() => setAuthOpen(true)}
+              className="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
+            >
+              <User size={18} className="mr-2" />
+              Login / Registrar
+            </button>
+          ) : (
+            <button
+              onClick={() => setProfileOpen(true)}
+              className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
+            >
+              <img src={user.avatar} alt="Avatar" className="w-6 h-6 rounded-full mr-2" />
+              {user.username}
+            </button>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -50,13 +69,38 @@ const Navbar: React.FC = () => {
           <NavItem icon={<MessageSquare size={18} />} text="Chat" />
           <NavItem icon={<Trophy size={18} />} text="Matches" />
           <NavItem icon={<Calendar size={18} />} text="Schedule" />
-          <button className="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-md transition-colors duration-300 w-full flex items-center justify-center">
-            <User size={18} className="mr-2" />
-            Login
-          </button>
+          {!user ? (
+            <button
+              onClick={() => setAuthOpen(true)}
+              className="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-md transition-colors duration-300 w-full flex items-center justify-center"
+            >
+              <User size={18} className="mr-2" />
+              Login / Registrar
+            </button>
+          ) : (
+            <button
+              onClick={() => setProfileOpen(true)}
+              className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md transition-colors duration-300 w-full flex items-center justify-center"
+            >
+              <img src={user.avatar} alt="Avatar" className="w-6 h-6 rounded-full mr-2" />
+              {user.username}
+            </button>
+          )}
+
         </div>
       )}
+      {/* Modals */}
+      <AuthModal isOpen={isAuthOpen} onClose={() => setAuthOpen(false)} onLogin={(username, avatar) => {
+        setUser({ username, avatar });
+        setAuthOpen(false);
+      }} />
+
+      <ProfileModal isOpen={isProfileOpen} onClose={() => setProfileOpen(false)} user={user} onUpdate={(username, avatar) => {
+        setUser({ username, avatar });
+      }} />
+
     </nav>
+
   );
 };
 

@@ -59,7 +59,7 @@ const Chat: React.FC = () => {
 
   return (
     <div className="flex flex-col h-[calc(100vh-14rem)] bg-background-light rounded-lg overflow-hidden border border-primary/20 neon-border">
-      <ChatHeader />
+      <ChatHeader onlineUsers={new Set(messages.map(msg => msg.sender.id)).size}/>
       
       <MessageList 
         messages={messages} 
