@@ -4,6 +4,7 @@ import furiaLogo from '../assets/Furia_Esports_logo.png';
 import AuthModal from './Modal/AuthModal';
 import ProfileModal from './Modal/ProfileModal';
 import { useAuth } from './Contexts/AuthContext';
+import {Link} from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,9 +32,9 @@ const Navbar: React.FC = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
-          <NavItem icon={<MessageSquare size={18} />} text="Chat" />
-          <NavItem icon={<Trophy size={18} />} text="Matches" />
-          <NavItem icon={<Calendar size={18} />} text="Schedule" />
+          <NavItem icon={<MessageSquare size={18} />} text="Chat" to='/chat' />
+          <NavItem icon={<Trophy size={18} />} text="Matches" to='/matches'/>
+          <NavItem icon={<Calendar size={18} />} text="Schedule" to='/schedule'/>
           {!user ? (
             <button
               onClick={() => setAuthOpen(true)}
@@ -119,17 +120,18 @@ const Navbar: React.FC = () => {
 interface NavItemProps {
   icon: React.ReactNode;
   text: string;
+  to: string;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon, text }) => {
+const NavItem: React.FC<NavItemProps> = ({ icon, text, to }) => {
   return (
-    <a
-      href="#"
+    <Link
+      to={to}
       className="text-text-secondary hover:text-primary flex items-center transition-colors duration-300"
     >
       <span className="mr-2">{icon}</span>
       {text}
-    </a>
+    </Link>
   );
 };
 
