@@ -1,21 +1,32 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import Chat from './components/Chat/Chat';
 import GameStatus from './components/GameStatus/GameStatus';
+import HomePage from './pages/HomePage';
 import './App.css';
 import { AuthProvider } from './components/Contexts/AuthContext.tsx';
+
 function App() {
   return (
     <AuthProvider>
-      <Layout>
-        <div className="flex flex-col lg:flex-row w-full h-full gap-4">
-          <div className="w-full lg:w-2/3 h-full">
-            <Chat />
-          </div>
-          <div className="w-full lg:w-1/3 h-full">
-            <GameStatus />
-          </div>
-        </div>
-      </Layout>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/chat" element={
+              // ESTA É A PÁGINA DE CHAT GLOBAL IGUAL ERA ANTES
+              <div className="flex flex-col lg:flex-row w-full h-full gap-4">
+                <div className="w-full lg:w-2/3 h-full">
+                  <Chat />
+                </div>
+                <div className="w-full lg:w-1/3 h-full">
+                  <GameStatus />
+                </div>
+              </div>
+            } />
+          </Routes>
+        </Layout>
+      </Router>
     </AuthProvider>
   );
 }
