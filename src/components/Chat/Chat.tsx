@@ -27,8 +27,14 @@ const Chat: React.FC = () => {
 
     // Subscribe to new messages
     const unsubscribe = websocketService.onMessage((message) => {
+      if (!message.id || !message.sender?.id) {
+        console.warn("Mensagem inválida recebida do websocket:", message);
+        return;
+      }
+    
       setMessages(prev => [...prev, message]);
     });
+    
 
     return () => {
       unsubscribe();
