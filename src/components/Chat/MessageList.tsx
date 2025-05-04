@@ -8,21 +8,20 @@ interface MessageListProps {
   endOfMessagesRef: RefObject<HTMLDivElement>;
 }
 
-const MessageList: React.FC<MessageListProps> = ({
-  messages,
-  currentUser,
-  endOfMessagesRef
-}) => {
+const MessageList: React.FC<MessageListProps> = ({ messages, endOfMessagesRef }) => {
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4">
-      {messages
-        .filter((msg): msg is Message => !!msg?.id && !!msg?.sender?.id)
-        .map((message) => (
-          <MessageItem
-            key={message.id}
-            message={message}
-          />
-        ))}
+      {messages.map((message) => (
+        <React.Fragment key={message.id}>
+          {message?.sender?.id ? (
+            <MessageItem message={message} />
+          ) : (
+            <div className="text-red-500 text-xs">
+              Mensagem inválida (ID: {message.id})
+            </div>
+          )}
+        </React.Fragment>
+      ))}
       <div ref={endOfMessagesRef} />
     </div>
   );

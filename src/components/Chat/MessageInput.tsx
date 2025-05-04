@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Send, Smile, Paperclip } from 'lucide-react';
 import { User } from '../../types'; // Adjust the import path as necessary
+import EmojiPicker from 'emoji-picker-react'; // Ou outra biblioteca
+
 
 interface MessageInputProps {
   onSendMessage: (content: string) => void;
@@ -14,6 +16,14 @@ const MessageInput: React.FC<MessageInputProps> = ({
   onRequireLogin 
 }) => {
   const [message, setMessage] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleEmojiClick = (emojiData: any) => {
+    setMessage(prev => prev + emojiData.emoji);
+    setShowEmojiPicker(false);
+    inputRef.current?.focus();
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,13 +36,24 @@ const MessageInput: React.FC<MessageInputProps> = ({
 
     onSendMessage(message);
     setMessage('');
+    setShowEmojiPicker(false);
   };
 
   return (
     <div className="border-t border-primary/20 p-4 bg-background-light">
+       {showEmojiPicker && (
+        <div className="absolute bottom-16 left-4 z-10">
+          <EmojiPicker 
+            onEmojiClick={handleEmojiClick}
+            width={300}
+            height={400}
+          />
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="flex items-center">
         <button 
           type="button" 
+          onClick={() => setShowEmojiPicker(!showEmojiPicker)}
           className="p-2 rounded-full hover:bg-background text-text-secondary hover:text-primary transition-colors duration-300"
         >
           <Smile size={20} />
