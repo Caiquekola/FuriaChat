@@ -97,16 +97,13 @@ const Navbar: React.FC = () => {
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setAuthOpen(false)}
-        onLogin={() => setAuthOpen(false)} // Só fecha o modal, o AuthModal já cuida do login
+
       />
 
       <ProfileModal
         isOpen={isProfileOpen}
         onClose={() => setProfileOpen(false)}
-        onSave={(username, avatar) => {
-          // Atualiza o contexto diretamente
-          updateUser({ username, avatar });
-        }}
+
       />
 
     </nav>

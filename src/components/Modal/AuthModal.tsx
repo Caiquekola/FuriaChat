@@ -4,10 +4,9 @@ import { useAuth } from '../Contexts/AuthContext';
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLogin: (username: string, avatar: string) => void;
 }
 
-const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin  }) => {
+const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose  }) => {
   const [username, setUsername] = useState('');
   const { login } = useAuth();
 
@@ -22,7 +21,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin  }) => {
       avatar,
     });
 
-    onLogin(username, avatar); // Call the onLogin function passed as prop
+    
     onClose();
   };
 
@@ -37,7 +36,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin  }) => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Enter your username"
-          className="w-full p-2 border border-gray-300 rounded mb-4"
+          className="w-full p-2 text-black border border-gray-300 rounded mb-4"
         />
         <button
           onClick={handleRegister}
