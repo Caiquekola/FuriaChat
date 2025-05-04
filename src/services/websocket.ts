@@ -2,7 +2,7 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { Message, Match } from '../types';
 
-const SOCKET_URL = 'http://localhost:8080/ws';
+const SOCKET_URL = `${import.meta.env.VITE_BACKEND_URL}/ws`;
 const CHAT_TOPIC = '/topic/messages';
 const GAME_STATUS_TOPIC = '/topic/game-status';
 

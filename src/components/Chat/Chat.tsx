@@ -21,7 +21,7 @@ const Chat: React.FC = () => {
     websocketService.connect();
 
     // Load initial messages
-    fetch('http://localhost:8080/api/messages')
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/messages`)
       .then(response => response.json())
       .then(data => setMessages(data));
 

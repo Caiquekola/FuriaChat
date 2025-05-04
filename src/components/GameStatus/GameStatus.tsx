@@ -16,7 +16,7 @@ const GameStatus: React.FC = () => {
     websocketService.connect();
 
     // Load initial game status
-    fetch('http://localhost:8080/api/game/status')
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/game/status`)
     .then(res => {
       if (!res.ok) throw new Error('Erro HTTP: ' + res.status);
       return res.text();
