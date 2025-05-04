@@ -62,7 +62,7 @@ const Chat: React.FC = () => {
       <ChatHeader onlineUsers={new Set(messages.map(msg => msg.sender.id)).size}/>
       
       <MessageList 
-        messages={messages} 
+        messages={messages.filter(msg => msg && msg.id)} 
         currentUser={currentUser} 
         endOfMessagesRef={endOfMessagesRef}
       />

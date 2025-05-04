@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, ThumbsUp, MessageSquare, Clock } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { Message } from '../../types';
 
 interface MessageItemProps {

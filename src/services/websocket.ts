@@ -41,15 +41,18 @@ class WebSocketService {
       const chatMessage = JSON.parse(message.body);
 
       const formattedMessage: Message = {
-        ...chatMessage,
+        id: chatMessage.id ?? `ws-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        content: chatMessage.content || "Mensagem vazia",
         sender: {
           id: chatMessage.senderId || "unknown",
+          isAdmin: chatMessage.isAdmin || false,
           username: chatMessage.senderUsername || "Usuário desconhecido",
           avatar: chatMessage.senderAvatar || ""
         },
         timestamp: (chatMessage.timestamp && !isNaN(new Date(chatMessage.timestamp).getTime()))
           ? new Date(chatMessage.timestamp)
-          : new Date()
+          : new Date(),
+          reactions: chatMessage.reactions || [],
       };
 
       if (!formattedMessage.id) {
