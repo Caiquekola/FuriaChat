@@ -11,7 +11,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   const { user } = useAuth(); // Obtenha o usuário atual do contexto
   
   // Determine se a mensagem é do usuário atual
-  const isOwnMessage = user?.id === message.sender.id;
+  const isOwnMessage = user?.id === message.sender?.id;
   
   const formatTime = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {

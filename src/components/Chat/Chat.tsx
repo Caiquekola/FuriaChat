@@ -19,28 +19,53 @@ const Chat: React.FC = () => {
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Connect to WebSocket
-    websocketService.connect();
-
-    // Load initial messages
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/messages`)
-      .then(response => response.json())
-      .then(data => setMessages(data));
-
-    // Subscribe to new messages
-    const unsubscribe = websocketService.onMessage((message) => {
-      if (!message.id || !message.sender?.id) {
-        console.warn("Mensagem inválida recebida do websocket:", message);
-        return;
+    let isMounted = true;
+    
+    const fetchMessages = async (): Promise<Message[]> => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/messages`);
+        if (!response.ok) throw new Error('Erro ao carregar mensagens');
+        return await response.json();
+      } catch (error) {
+        console.error("Erro ao carregar mensagens iniciais:", error);
+        return [];
       }
-
-      setMessages(prev => [...prev, message]);
-    });
-
-
+    };
+  
+    const handleNewMessage = (message: Message) => {
+      if (!isMounted) return;
+      
+      setMessages(prev => {
+        // Evita duplicação de mensagens
+        if (prev.some(m => m.id === message.id)) return prev;
+        return [...prev, message];
+      });
+    };
+  
+    const initializeChat = async () => {
+      try {
+        // 1. Carrega mensagens iniciais
+        const messages = await fetchMessages();
+        if (isMounted) setMessages(messages);
+        
+        // 2. Conecta ao WebSocket
+        websocketService.connect();
+        
+        // 3. Registra handler de mensagens
+        return websocketService.onMessage(handleNewMessage);
+      } catch (error) {
+        console.error("Erro na inicialização do chat:", error);
+      }
+    };
+  
+    const cleanupPromise = initializeChat();
+  
     return () => {
-      unsubscribe();
-      websocketService.disconnect();
+      isMounted = false;
+      cleanupPromise.then(unsubscribe => {
+        unsubscribe?.();
+        websocketService.disconnect();
+      });
     };
   }, []);
 
@@ -55,10 +80,16 @@ const Chat: React.FC = () => {
   const sendMessage = (content: string) => {
     if (!content.trim() || !currentUser) return;
 
-    const message: Partial<Message> = {
+    const message: Message = {
+      id: Date.now().toString(), // Adicione um ID único temporário
       content,
-      sender: currentUser,
-      timestamp: new Date(),
+      sender: {
+        id: currentUser.id,
+        username: currentUser.username,
+        avatar: currentUser.avatar,
+        isAdmin: currentUser.isAdmin || false
+      },
+      timestamp: new Date(), // Formato ISO para melhor compatibilidade
       reactions: []
     };
 

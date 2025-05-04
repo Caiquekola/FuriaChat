@@ -1,3 +1,4 @@
+// WebSocketService.ts
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { Message, Match } from '../types';
@@ -14,13 +15,15 @@ class WebSocketService {
   constructor() {
     this.client = new Client({
       webSocketFactory: () => new SockJS(SOCKET_URL),
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
       onConnect: () => {
         console.log('Connected to WebSocket');
         this.subscribeToTopics();
       },
       onDisconnect: () => {
         console.log('Disconnected from WebSocket');
-        setTimeout(() => this.client.activate(), 2000); // Reconnect after 5 seconds  
       },
       onStompError: (frame) => {
         console.error('WebSocket error:', frame);
@@ -29,7 +32,9 @@ class WebSocketService {
   }
 
   connect() {
-    this.client.activate();
+    if (!this.client.active) {
+      this.client.activate();
+    }
   }
 
   disconnect() {
@@ -38,43 +43,59 @@ class WebSocketService {
 
   private subscribeToTopics() {
     this.client.subscribe(CHAT_TOPIC, (message) => {
-      const chatMessage = JSON.parse(message.body);
-
-      const formattedMessage: Message = {
-        id: chatMessage.id ?? `ws-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-        content: chatMessage.content || "Mensagem vazia",
-        sender: {
-          id: chatMessage.senderId || "unknown",
-          isAdmin: chatMessage.isAdmin || false,
-          username: chatMessage.senderUsername || "Usuário desconhecido",
-          avatar: chatMessage.senderAvatar || ""
-        },
-        timestamp: (chatMessage.timestamp && !isNaN(new Date(chatMessage.timestamp).getTime()))
-          ? new Date(chatMessage.timestamp)
-          : new Date(),
-          reactions: chatMessage.reactions || [],
-      };
-
-      if (!formattedMessage.id) {
-        console.warn("Mensagem inválida recebida do servidor", formattedMessage);
-        return;
+      try {
+        const parsedMessage = JSON.parse(message.body);
+        const validatedMessage = this.validateMessage(parsedMessage);
+        this.messageHandlers.forEach(handler => handler(validatedMessage));
+      } catch (error) {
+        console.error('Error processing message:', error);
       }
-
-      this.messageHandlers.forEach(handler => handler(formattedMessage));
     });
 
     this.client.subscribe(GAME_STATUS_TOPIC, (message) => {
-      const gameStatus = JSON.parse(message.body);
-      this.gameStatusHandlers.forEach(handler => handler(gameStatus));
+      try {
+        const status = JSON.parse(message.body);
+        this.gameStatusHandlers.forEach(handler => handler(status));
+      } catch (error) {
+        console.error('Error processing game status:', error);
+      }
     });
   }
 
+  private validateMessage(rawMessage: any): Message {
+    // Validação robusta
+    if (!rawMessage?.content) {
+      throw new Error('Invalid message content');
+    }
 
+    return {
+      id: rawMessage.id || `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      content: rawMessage.content,
+      sender: {
+        id: rawMessage.sender?.id || 'unknown',
+        username: rawMessage.sender?.username || 'Usuário',
+        avatar: rawMessage.sender?.avatar || 'https://i.pravatar.cc/150?u=unknown',
+        isAdmin: Boolean(rawMessage.sender?.isAdmin)
+      },
+      timestamp: rawMessage.timestamp ? new Date(rawMessage.timestamp) : new Date(),
+      reactions: Array.isArray(rawMessage.reactions) ? rawMessage.reactions : []
+    };
+  }
 
   sendMessage(message: Partial<Message>) {
+    if (!this.client.connected) {
+      console.warn('Cannot send message - WebSocket not connected');
+      return;
+    }
+
+    const messageToSend = {
+      ...message,
+      timestamp: new Date().toISOString()
+    };
+
     this.client.publish({
       destination: '/app/chat',
-      body: JSON.stringify(message)
+      body: JSON.stringify(messageToSend)
     });
   }
 

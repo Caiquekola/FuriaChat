@@ -9,20 +9,42 @@ interface AuthModalProps {
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose  }) => {
   const [username, setUsername] = useState('');
   const { login, user: currentUser } = useAuth();
+  const [error, setError] = useState('');
 
-  const handleRegister = () => {
-    if (!username.trim()) return;
+  const handleRegister = async () => {
+    if (!username.trim()) {
+      setError('Username is required');
+      return;
+    }
 
-    const randomAvatarId = Math.floor(Math.random() * 70) + 1;
-    const avatar = `https://i.pravatar.cc/150?img=${randomAvatarId}`;
-    login({
-      id: `user-${Date.now()}`,
-      username,
-      avatar,
-    });
+    try {
+      const randomAvatarId = Math.floor(Math.random() * 70) + 1;
+      const avatar = `https://i.pravatar.cc/150?img=${randomAvatarId}`;
+      
+      const newUser = {
+        id: `user-${Date.now()}`,
+        username: username.trim(),
+        avatar,
+        isAdmin: false
+      };
 
-    
-    onClose();
+      // Envie para o backend primeiro
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newUser)
+      });
+
+      if (!response.ok) throw new Error('Registration failed');
+
+      // Depois faça login localmente
+      login(newUser);
+      onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Registration failed');
+    }
   };
 
   if(!isOpen) return null;
