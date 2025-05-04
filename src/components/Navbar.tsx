@@ -95,7 +95,7 @@ const Navbar: React.FC = () => {
         setAuthOpen(false);
       }} />
 
-      <ProfileModal isOpen={isProfileOpen} onClose={() => setProfileOpen(false)} user={user} onUpdate={(username, avatar) => {
+      <ProfileModal isOpen={isProfileOpen} onClose={() => setProfileOpen(false)} user={user} onSave={(username, avatar) => {
         setUser({ username, avatar });
       }} />
 

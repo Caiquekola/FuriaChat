@@ -7,13 +7,13 @@ interface ProfileModalProps {
   user: {
     username: string;
     avatar: string;
-  };
+  } | null;
   onSave: (username: string, avatar: string) => void;
 }
 
 const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, user, onSave }) => {
-  const [username, setUsername] = useState(user.username);
-  const [avatar, setAvatar] = useState(user.avatar);
+  const [username, setUsername] = useState(user?.username ?? '');
+  const [avatar, setAvatar] = useState(user?.avatar ?? '');
 
   if (!isOpen) return null;
 
