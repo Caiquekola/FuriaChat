@@ -32,11 +32,8 @@ const Chat: React.FC = () => {
         
         const data = await response.json();
         if (isMounted) {
-          setMessages(data.filter((msg: any) => {
-            const isValid = msg?.id && msg?.content && msg?.sender?.id;
-            if (!isValid) console.warn('Mensagem inválida ignorada:', msg);
-            return isValid;
-          }));
+          const adapted = adaptMessages(data);
+          setMessages(adapted);
         }
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
@@ -44,7 +41,24 @@ const Chat: React.FC = () => {
         }
       }
     };
-  
+
+    
+    const adaptMessages = (messages: any[]): Message[] => {
+      return messages.map((msg) => {
+        return {
+          id: msg.id,
+          content: msg.content,
+          sender: {
+            id: msg.senderId,
+            username: msg.senderUsername || "Anônimo",
+            avatar: msg.senderAvatar || "https://i.pravatar.cc/150?u=unknown",
+            isAdmin: msg.admin || false
+          },
+          timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date(),
+          reactions: msg.reactions || []
+        };
+      });
+    };
     const handleNewMessage = (message: any) => {
       if (!isMounted) return;
       
