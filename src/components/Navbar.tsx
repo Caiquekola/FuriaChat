@@ -76,9 +76,9 @@ const Navbar: React.FC = () => {
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="md:hidden bg-background-light mt-4 py-4 px-6 space-y-4 animate-fade-in-down">
-          <NavItem icon={<MessageSquare size={18} />} text="Chat" />
-          <NavItem icon={<Trophy size={18} />} text="Matches" />
-          <NavItem icon={<Calendar size={18} />} text="Schedule" />
+          <NavItem icon={<MessageSquare size={18} />} text="Chat" to='/chat' />
+          <NavItem icon={<Trophy size={18} />} text="Matches" to='/matches'/>
+          <NavItem icon={<Calendar size={18} />} text="Schedule" to='/schedule'/>
           {!user ? (
             <button
               onClick={() => setAuthOpen(true)}
