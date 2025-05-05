@@ -93,7 +93,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
             <button
               onClick={handleRegister}
-              className="w-full bg-white hover:bg-primary-gray text-white py-2 rounded-md font-semibold transition-colors"
+              className="w-full bg-white hover:bg-primary-gray text-black py-2 rounded-md font-bold transition-colors"
             >
               Registrar
             </button>
