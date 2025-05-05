@@ -72,7 +72,7 @@ const GameStatus: React.FC = () => {
         },
         team2: {
           name: "Vitality",
-          logo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/8/86/Team_Vitalitylogo_square.png/revision/latest/scale-to-width-down/1000?cb=20230224142251",
+          logo: "https://upload.wikimedia.org/wikipedia/fr/3/30/Team_Vitality_Logo_2018.png",
           score: 0
         },
         map: "Ancient",
