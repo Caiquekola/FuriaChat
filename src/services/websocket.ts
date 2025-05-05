@@ -1,16 +1,14 @@
-// WebSocketService.ts
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { Message, Match } from '../types';
 
 const SOCKET_URL = `${import.meta.env.VITE_BACKEND_URL}/ws`;
 const CHAT_TOPIC = '/topic/messages';
-const GAME_STATUS_TOPIC = '/topic/game-status';
 
 class WebSocketService {
   private client: Client;
   private messageHandlers: ((message: Message) => void)[] = [];
-  private gameStatusHandlers: ((status: Match) => void)[] = [];
+  private matchMessageHandlers: { [matchId: string]: ((message: Message) => void)[] } = {};
 
   constructor() {
     this.client = new Client({
@@ -20,7 +18,7 @@ class WebSocketService {
       heartbeatOutgoing: 4000,
       onConnect: () => {
         console.log('Connected to WebSocket');
-        this.subscribeToTopics();
+        this.subscribeToGlobalChat();
       },
       onDisconnect: () => {
         console.log('Disconnected from WebSocket');
@@ -41,57 +39,29 @@ class WebSocketService {
     this.client.deactivate();
   }
 
-  private subscribeToTopics() {
+  // ------------------------------
+  // GLOBAL CHAT
+  // ------------------------------
+  private subscribeToGlobalChat() {
     this.client.subscribe(CHAT_TOPIC, (message) => {
       try {
         const parsed = JSON.parse(message.body);
-        
-        // Formatação mínima garantida
-        const formatted: Message = {
-          id: parsed.id || `temp-${Date.now()}`,
-          content: parsed.content || '[Mensagem sem conteúdo]',
-          sender: {
-            id: parsed.sender?.id || 'unknown',
-            username: parsed.sender?.username || 'Usuário',
-            avatar: parsed.sender?.avatar || '',
-            isAdmin: Boolean(parsed.sender?.isAdmin)
-          },
-          timestamp: parsed.timestamp ? new Date(parsed.timestamp) : new Date(),
-          reactions: Array.isArray(parsed.reactions) ? parsed.reactions : []
-        };
-        
-        this.messageHandlers.forEach(h => h(formatted));
+        this.messageHandlers.forEach(h => h(this.formatMessage(parsed)));
       } catch (error) {
-        console.error('Erro ao processar mensagem:', error, message.body);
+        console.error('Erro no chat global:', error);
       }
     });
   }
 
-  private validateMessage(rawMessage: any): Message {
-    // Validação robusta
-    if (!rawMessage?.content) {
-      throw new Error('Invalid message content');
-    }
-
-    return {
-      id: rawMessage.id || `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      content: rawMessage.content,
-      sender: {
-        id: rawMessage.sender?.id || 'unknown',
-        username: rawMessage.sender?.username || 'Usuário',
-        avatar: rawMessage.sender?.avatar || 'https://i.pravatar.cc/150?u=unknown',
-        isAdmin: Boolean(rawMessage.sender?.isAdmin)
-      },
-      timestamp: rawMessage.timestamp ? new Date(rawMessage.timestamp) : new Date(),
-      reactions: Array.isArray(rawMessage.reactions) ? rawMessage.reactions : []
+  onMessage(handler: (message: Message) => void) {
+    this.messageHandlers.push(handler);
+    return () => {
+      this.messageHandlers = this.messageHandlers.filter(h => h !== handler);
     };
   }
 
   sendMessage(message: Partial<Message>) {
-    if (!this.client.connected) {
-      console.warn('Cannot send message - WebSocket not connected');
-      return;
-    }
+    if (!this.client.connected) return;
 
     const messageToSend = {
       ...message,
@@ -104,17 +74,48 @@ class WebSocketService {
     });
   }
 
-  onMessage(handler: (message: Message) => void) {
-    this.messageHandlers.push(handler);
-    return () => {
-      this.messageHandlers = this.messageHandlers.filter(h => h !== handler);
-    };
+  // ------------------------------
+  // MATCH CHAT (dinâmico)
+  // ------------------------------
+  subscribeToMatch(matchId: string, handler: (message: Message) => void) {
+    if (!this.matchMessageHandlers[matchId]) {
+      this.matchMessageHandlers[matchId] = [];
+    }
+
+    this.matchMessageHandlers[matchId].push(handler);
+
+    this.client.subscribe(`/topic/match/${matchId}`, (message) => {
+      const parsed = JSON.parse(message.body);
+      this.matchMessageHandlers[matchId]?.forEach(h => h(this.formatMessage(parsed)));
+    });
   }
 
-  onGameStatus(handler: (status: Match) => void) {
-    this.gameStatusHandlers.push(handler);
-    return () => {
-      this.gameStatusHandlers = this.gameStatusHandlers.filter(h => h !== handler);
+  sendMatchMessage(matchId: string, message: Partial<Message>) {
+    if (!this.client.connected) return;
+
+    const messageToSend = {
+      ...message,
+      timestamp: new Date().toISOString()
+    };
+
+    this.client.publish({
+      destination: `/app/match/${matchId}`,
+      body: JSON.stringify(messageToSend)
+    });
+  }
+
+  private formatMessage(raw: any): Message {
+    return {
+      id: raw.id || `temp-${Date.now()}`,
+      content: raw.content || '[Sem conteúdo]',
+      sender: {
+        id: raw.sender?.id || 'unknown',
+        username: raw.sender?.username || 'Usuário',
+        avatar: raw.sender?.avatar || '',
+        isAdmin: Boolean(raw.sender?.isAdmin)
+      },
+      timestamp: raw.timestamp ? new Date(raw.timestamp) : new Date(),
+      reactions: Array.isArray(raw.reactions) ? raw.reactions : []
     };
   }
 }

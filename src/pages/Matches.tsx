@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface Match {
@@ -10,17 +10,20 @@ interface Match {
   AwayTeamId: number;
 }
 
-const MatchesPage: React.FC = () => {
-  const [matches, setMatches] = useState<Match[]>([]);
-  const navigate = useNavigate();
-  const competitionId = 1; // ← ALTERE para a competição desejada
+const simulatedMatches: Match[] = [
+  { GameId: 1, DateTime: '2025-06-01T15:00:00', HomeTeam: 'FURIA', AwayTeam: 'Team Liquid', HomeTeamId: 1, AwayTeamId: 2 },
+  { GameId: 2, DateTime: '2025-06-02T18:00:00', HomeTeam: 'FURIA', AwayTeam: 'NAVI', HomeTeamId: 1, AwayTeamId: 3 },
+  { GameId: 3, DateTime: '2025-06-03T20:00:00', HomeTeam: 'FURIA', AwayTeam: 'Astralis', HomeTeamId: 1, AwayTeamId: 4 },
+  { GameId: 4, DateTime: '2025-06-04T16:00:00', HomeTeam: 'FURIA', AwayTeam: 'G2', HomeTeamId: 1, AwayTeamId: 5 },
+  { GameId: 5, DateTime: '2025-06-05T19:00:00', HomeTeam: 'FURIA', AwayTeam: 'MOUZ', HomeTeamId: 1, AwayTeamId: 6 },
+  { GameId: 6, DateTime: '2025-06-06T13:00:00', HomeTeam: 'FURIA', AwayTeam: 'ENCE', HomeTeamId: 1, AwayTeamId: 7 },
+  { GameId: 7, DateTime: '2025-06-07T22:00:00', HomeTeam: 'FURIA', AwayTeam: 'Vitality', HomeTeamId: 1, AwayTeamId: 8 },
+  { GameId: 8, DateTime: '2025-06-08T21:00:00', HomeTeam: 'FURIA', AwayTeam: 'Heroic', HomeTeamId: 1, AwayTeamId: 9 },
+];
 
-  useEffect(() => {
-    fetch(`https://api.sportsdata.io/v3/csgo/scores/json/GamesByDate/2024-MAY-01?key=${import.meta.env.VITE_CSGOAPI_KEY}`)
-      .then(res => res.json())
-      .then(data => setMatches(data))
-      .catch(err => console.error(err));
-  }, []);
+const MatchesPage: React.FC = () => {
+  const [matches] = useState<Match[]>(simulatedMatches);
+  const navigate = useNavigate();
 
   return (
     <div className="p-8">
@@ -29,7 +32,7 @@ const MatchesPage: React.FC = () => {
         {matches.map(match => (
           <div 
             key={match.GameId} 
-            className="border p-4 rounded cursor-pointer hover:bg-gray-100"
+            className="border p-4 rounded cursor-pointer hover:bg-gray-100 transition"
             onClick={() => navigate(`/match/${match.GameId}`)}
           >
             <h2 className="font-semibold">{match.HomeTeam} vs {match.AwayTeam}</h2>

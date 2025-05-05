@@ -1,18 +1,33 @@
 import React from 'react';
 import { Clock } from 'lucide-react';
 import { Message } from '../../types';
-import { useAuth } from '../Contexts/AuthContext'; // Importe o useAuth
+import { useAuth } from '../Contexts/AuthContext';
 
 interface MessageItemProps {
   message: Message;
 }
 
 const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
-  const { user } = useAuth(); // Obtenha o usuário atual do contexto
-  
+  const { user } = useAuth();
+
   // Determine se a mensagem é do usuário atual
   const isOwnMessage = user?.id === message.sender?.id;
-  
+
+  // VERIFICAR SE É UMA SYSTEM MESSAGE
+  const isSystemMessage = message.sender.id === 'system';
+
+  // --> SE FOR UMA SYSTEM MESSAGE, RETORNAR DIRETAMENTE
+  if (isSystemMessage) {
+    return (
+      <div className="flex justify-center my-4">
+        <div className="bg-accent text-white px-6 py-3 rounded-full text-sm shadow animate-fade-in">
+          {message.content}
+        </div>
+      </div>
+    );
+  }
+
+  // Função para formatar o horário
   const formatTime = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
       hour: '2-digit',
@@ -20,15 +35,13 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
     }).format(date);
   };
 
-  const isSystemMessage = message.sender.id === 'system';
-  
   return (
     <div 
       className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} mb-4 animate-fade-in`}
     >
-      
       <div className={`flex ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'} max-w-[80%]`}>
-        {/* Avatar - só mostra se não for mensagem própria */}
+        
+        {/* Avatar */}
         {!isOwnMessage && (
           <div className="flex-shrink-0">
             <img 
@@ -39,7 +52,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
           </div>
         )}
 
-        {/* Message content */}
+        {/* Mensagem */}
         <div 
           className={`mx-2 ${
             isOwnMessage 
@@ -47,7 +60,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
               : 'bg-background-light rounded-tr-2xl rounded-br-2xl rounded-tl-sm rounded-bl-2xl border border-primary/10'
           } px-4 py-2 shadow-sm`}
         >
-          {/* Mostra o nome do remetente apenas se não for mensagem própria */}
+          {/* Header do remetente */}
           {!isOwnMessage && (
             <div className="flex items-center mb-1">
               <span 
@@ -64,7 +77,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
             </div>
           )}
           
-          {/* Para mensagens próprias, mostra o tempo à direita */}
+          {/* Horário para mensagens próprias */}
           {isOwnMessage && (
             <div className="flex justify-end items-center mb-1">
               <span className="text-text-secondary text-xs flex items-center">
