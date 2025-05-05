@@ -44,7 +44,7 @@ const Chat: React.FC = () => {
 
     
     const adaptMessages = (messages: any[]): Message[] => {
-      return messages.map((msg) => {
+      return messages.filter((msg) => msg?.id && msg?.content && msg?.senderId).map((msg) => {
         return {
           id: msg.id,
           content: msg.content,
