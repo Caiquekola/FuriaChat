@@ -85,7 +85,7 @@ const Navbar: React.FC = () => {
               className="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-md transition-colors duration-300 w-full flex items-center justify-center"
             >
               <User size={18} className="mr-2" />
-              Login / Registrar
+              Registrar
             </button>
           ) : (
             <button

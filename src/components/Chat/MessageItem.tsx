@@ -19,11 +19,14 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
       minute: '2-digit'
     }).format(date);
   };
+
+  const isSystemMessage = message.sender.id === 'system';
   
   return (
     <div 
       className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} mb-4 animate-fade-in`}
     >
+      
       <div className={`flex ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'} max-w-[80%]`}>
         {/* Avatar - só mostra se não for mensagem própria */}
         {!isOwnMessage && (
