@@ -69,7 +69,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           <X size={20} />
         </button>
 
-        <h2 className="text-2xl font-bold mb-6 text-primary text-center">Crie seu Nome</h2>
+        <h2 className="text-2xl font-bold mb-6 text-primary text-left">Crie seu Nome</h2>
 
         {success ? (
           <div className="text-success text-center font-medium">
@@ -93,7 +93,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
             <button
               onClick={handleRegister}
-              className="w-full bg-primary hover:bg-primary-dark text-white py-2 rounded-md font-semibold transition-colors"
+              className="w-full bg-white hover:bg-primary-gray text-white py-2 rounded-md font-semibold transition-colors"
             >
               Registrar
             </button>

@@ -33,7 +33,7 @@ const GameStatus: React.FC = () => {
         tournament: "ESL Pro League",
         team1: {
           name: "FURIA",
-          logo: "https://en.wikipedia.org/wiki/File:Furia_Esports_logo.png",
+          logo: "https://upload.wikimedia.org/wikipedia/pt/f/f9/Furia_Esports_logo.png",
           score: 0
         },
         team2: {
@@ -50,7 +50,7 @@ const GameStatus: React.FC = () => {
         tournament: "BLAST Premier",
         team1: {
           name: "FURIA",
-          logo: "https://en.wikipedia.org/wiki/File:Furia_Esports_logo.png",
+          logo: "https://upload.wikimedia.org/wikipedia/pt/f/f9/Furia_Esports_logo.png",
           score: 0
         },
         team2: {
@@ -67,12 +67,12 @@ const GameStatus: React.FC = () => {
         tournament: "IEM Cologne",
         team1: {
           name: "FURIA",
-          logo: "https://en.wikipedia.org/wiki/File:Furia_Esports_logo.png",
+          logo: "https://upload.wikimedia.org/wikipedia/pt/f/f9/Furia_Esports_logo.png",
           score: 0
         },
         team2: {
           name: "Vitality",
-          logo: "https://lol.fandom.com/wiki/Team_Vitality#/media/File:Team_Vitalitylogo_square.png",
+          logo: "https://static.wikia.nocookie.net/lolesports_gamepedia_en/images/8/86/Team_Vitalitylogo_square.png/revision/latest/scale-to-width-down/1000?cb=20230224142251",
           score: 0
         },
         map: "Ancient",

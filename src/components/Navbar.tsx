@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
         <div className="hidden md:flex items-center space-x-6">
           <NavItem icon={<MessageSquare size={18} />} text="Chat" to='/chat' />
           <NavItem icon={<Trophy size={18} />} text="Matches" to='/matches' />
-          <NavItem icon={<Calendar size={18} />} text="Schedule" to='/schedule' />
+          {/* <NavItem icon={<Calendar size={18} />} text="Schedule" to='/schedule' /> */}
           {!user ? (
             <button
               onClick={() => setAuthOpen(true)}
