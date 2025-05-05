@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { Send, Smile, Paperclip } from 'lucide-react';
-import { User } from '../../types'; // Adjust the import path as necessary
-import EmojiPicker from 'emoji-picker-react'; // Ou outra biblioteca
-
+import { User } from '../../types';
+import EmojiPicker from 'emoji-picker-react';
+import { toast } from 'react-hot-toast'; // <-- IMPORTA O TOAST
 
 interface MessageInputProps {
   onSendMessage: (content: string) => void;
-  currentUser: User | null; // Consider using a more specific type instead of 'any'
+  currentUser: User | null;
   onRequireLogin: () => void;
 }
 
@@ -30,7 +30,8 @@ const MessageInput: React.FC<MessageInputProps> = ({
     if (!message.trim()) return;
 
     if (!currentUser) {
-      onRequireLogin(); // Use the passed function instead of managing modal state here
+      onRequireLogin();
+      toast.error("Você precisa criar um nome de usuário para enviar mensagens.");
       return;
     }
 
@@ -40,8 +41,8 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   return (
-    <div className="border-t border-primary/20 p-4 bg-background-light">
-       {showEmojiPicker && (
+    <div className="border-t border-primary/20 p-4 bg-background-light relative">
+      {showEmojiPicker && (
         <div className="absolute bottom-16 left-4 z-10">
           <EmojiPicker 
             onEmojiClick={handleEmojiClick}
@@ -87,4 +88,4 @@ const MessageInput: React.FC<MessageInputProps> = ({
   );
 };
 
-export default MessageInput
+export default MessageInput;
