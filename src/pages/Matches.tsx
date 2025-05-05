@@ -13,11 +13,13 @@ interface Match {
 const MatchesPage: React.FC = () => {
   const [matches, setMatches] = useState<Match[]>([]);
   const navigate = useNavigate();
+  const competitionId = 1; // ← ALTERE para a competição desejada
 
   useEffect(() => {
-    fetch(`https://api.sportsdata.io/v3/csgo/scores/json/Schedule/{competitionId}?key=${import.meta.env.VITE_CSGOAPI_KEY}`)
+    fetch(`https://api.sportsdata.io/v3/csgo/scores/json/GamesByDate/2024-MAY-01?key=${import.meta.env.VITE_CSGOAPI_KEY}`)
       .then(res => res.json())
-      .then(data => setMatches(data));
+      .then(data => setMatches(data))
+      .catch(err => console.error(err));
   }, []);
 
   return (

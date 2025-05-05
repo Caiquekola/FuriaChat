@@ -3,6 +3,8 @@ import Layout from './components/Layout';
 import Chat from './components/Chat/Chat';
 import GameStatus from './components/GameStatus/GameStatus';
 import HomePage from './pages/HomePage';
+import MatchesPage from './pages/Matches'; // Importa a página de partidas
+import MatchChat from './pages/MatchChat'; // Importa a página de chat da partida
 import './App.css';
 import { AuthProvider } from './components/Contexts/AuthContext.tsx';
 
@@ -14,7 +16,6 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/chat" element={
-              // ESTA É A PÁGINA DE CHAT GLOBAL IGUAL ERA ANTES
               <div className="flex flex-col lg:flex-row w-full h-full gap-4">
                 <div className="w-full lg:w-2/3 h-full">
                   <Chat />
@@ -24,6 +25,8 @@ function App() {
                 </div>
               </div>
             } />
+            <Route path="/matches" element={<MatchesPage />} /> {/* ROTA DE LISTA */}
+            <Route path="/match/:id" element={<MatchChat />} /> {/* ROTA DO CHAT DA PARTIDA */}
           </Routes>
         </Layout>
       </Router>

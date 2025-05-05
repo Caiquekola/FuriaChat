@@ -65,19 +65,7 @@ const LiveMatch: React.FC<LiveMatchProps> = ({ match }) => {
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="mt-4 grid grid-cols-3 gap-3">
-          {['K/D', 'ADR', 'KAST'].map((stat, index) => (
-            <div key={index} className="bg-background-light p-3 rounded-lg text-center">
-              <div className="text-text-secondary text-xs mb-1">{stat}</div>
-              <div className="font-bold">
-                {stat === 'K/D' ? '1.23' : stat === 'ADR' ? '87.5' : '76%'}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* MVP player */}
+        {/* MVP player (pode ser opcional ou fictício por enquanto) */}
         <div className="mt-4 bg-background-light p-3 rounded-lg">
           <div className="text-text-secondary text-xs mb-2">CURRENT MVP</div>
           <div className="flex items-center">
@@ -88,20 +76,17 @@ const LiveMatch: React.FC<LiveMatchProps> = ({ match }) => {
             />
             <div>
               <div className="font-bold text-primary">arT</div>
-              <div className="text-xs text-text-secondary">27 kills, 5 assists</div>
+              <div className="text-xs text-text-secondary">Exemplo MVP do time</div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Highlights */}
       <div className="mt-4">
         <h3 className="text-lg font-semibold mb-2">Match Highlights</h3>
         <div className="space-y-3">
-          {[
-            '🔥 arT with an incredible AWP ace!',
-            '💥 KSCERATO clutches a 1v3 situation',
-            '🎯 Yuurih with a perfect spray transfer'
-          ].map((highlight, index) => (
+          {generateHighlights(match).map((highlight, index) => (
             <div 
               key={index} 
               className="p-3 bg-background rounded-lg border border-primary/10"
@@ -134,6 +119,17 @@ const Team: React.FC<TeamProps> = ({ name, logo, isHome }) => {
       </div>
     </div>
   );
+};
+
+// Função para gerar highlights fictícios baseados no time
+const generateHighlights = (match: Match): string[] => {
+  const highlights = [
+    `🔥 ${match.team1.name} com uma entrada perfeita no bomb!`,
+    `💥 ${match.team2.name} tentando a virada no round eco.`,
+    `🎯 Jogador destaque da ${match.team1.name} com clutch importante.`
+  ];
+
+  return highlights;
 };
 
 export default LiveMatch;
