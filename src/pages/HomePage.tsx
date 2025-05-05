@@ -4,11 +4,19 @@ import { MessageSquare } from 'lucide-react';
 
 const HomePage: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-background-dark to-background-light text-center p-8">
-      <div className="max-w-2xl space-y-8 animate-fade-in">
-        {/* Título com efeito de gradiente e glow */}
-        <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-clip-text text-white bg-gradient-to-r from-primary to-accent">
-          Bem-vindo ao <span className="text-white drop-shadow-glow">Fúria Fan Chat</span>!
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-background-dark to-background-light text-center p-8 overflow-hidden">
+      
+      {/* Background da FURIA com opacidade */}
+      <img 
+        src="https://upload.wikimedia.org/wikipedia/pt/f/f9/Furia_Esports_logo.png"
+        alt="Furia Background"
+        className="absolute inset-0 w-full h-full object-contain opacity-50 pointer-events-none select-none"
+      />
+
+      <div className="relative max-w-2xl space-y-8 animate-fade-in">
+        {/* Título com cor branca agora */}
+        <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-white drop-shadow-glow">
+          Bem-vindo ao <span className="text-white">Fúria Fan Chat</span>!
         </h1>
         
         {/* Subtítulo estilizado */}
@@ -50,8 +58,6 @@ const HomePage: React.FC = () => {
             duration-500
           "></span>
         </Link>
-        
-        
       </div>
     </div>
   );
