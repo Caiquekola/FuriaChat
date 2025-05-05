@@ -7,7 +7,7 @@ const HomePage: React.FC = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-background-dark to-background-light text-center p-8">
       <div className="max-w-2xl space-y-8 animate-fade-in">
         {/* Título com efeito de gradiente e glow */}
-        <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+        <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-clip-text text-white bg-gradient-to-r from-primary to-accent">
           Bem-vindo ao <span className="text-white drop-shadow-glow">Fúria Fan Chat</span>!
         </h1>
         
@@ -51,11 +51,7 @@ const HomePage: React.FC = () => {
           "></span>
         </Link>
         
-        {/* Elementos decorativos opcionais */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary/10 blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-accent/10 blur-3xl"></div>
-        </div>
+        
       </div>
     </div>
   );
