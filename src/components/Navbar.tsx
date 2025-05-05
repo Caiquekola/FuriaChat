@@ -4,7 +4,7 @@ import furiaLogo from '../assets/Furia_Esports_logo.png';
 import AuthModal from './Modal/AuthModal';
 import ProfileModal from './Modal/ProfileModal';
 import { useAuth } from './Contexts/AuthContext';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,21 +20,21 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-background-light py-4 px-6 shadow-md sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center">
-          <div className="h-10 w-10 mr-3">
-            <img src={furiaLogo} alt="FURIA Logo" className="h-full w-full" />
-          </div>
-          {/* Logo and Title */}
-          <h1 className="text-2xl font-bold text-white glow">
-            FURIA <span className="text-primary text-gray ">FAN CHAT</span>
-          </h1>
+        <div className="flex items-center cursor-pointer">
+          <Link to="/" className="flex items-center space-x-3 text-2xl font-bold text-white glow hover:text-primary transition-colors">
+            <img src={furiaLogo} alt="FURIA Logo" className="h-10 w-10" />
+            <span>
+              FURIA <span className="text-primary text-gray">FAN CHAT</span>
+            </span>
+          </Link>
         </div>
+
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
           <NavItem icon={<MessageSquare size={18} />} text="Chat" to='/chat' />
-          <NavItem icon={<Trophy size={18} />} text="Matches" to='/matches'/>
-          <NavItem icon={<Calendar size={18} />} text="Schedule" to='/schedule'/>
+          <NavItem icon={<Trophy size={18} />} text="Matches" to='/matches' />
+          <NavItem icon={<Calendar size={18} />} text="Schedule" to='/schedule' />
           {!user ? (
             <button
               onClick={() => setAuthOpen(true)}
@@ -77,8 +77,8 @@ const Navbar: React.FC = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-background-light mt-4 py-4 px-6 space-y-4 animate-fade-in-down">
           <NavItem icon={<MessageSquare size={18} />} text="Chat" to='/chat' />
-          <NavItem icon={<Trophy size={18} />} text="Matches" to='/matches'/>
-          <NavItem icon={<Calendar size={18} />} text="Schedule" to='/schedule'/>
+          <NavItem icon={<Trophy size={18} />} text="Matches" to='/matches' />
+          <NavItem icon={<Calendar size={18} />} text="Schedule" to='/schedule' />
           {!user ? (
             <button
               onClick={() => setAuthOpen(true)}
