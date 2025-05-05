@@ -2,6 +2,8 @@
 
 Uma plataforma interativa em tempo real desenvolvida para aproximar a torcida da FURIA Esports!
 
+Link do [BackEnd](https://github.com/Caiquekola/FuriaBackend "BackEnd") em SpringBoot! 💚
+
 ##  Visão Geral 🎯
 
 O **FURIA FAN CHAT** oferece uma experiência única para fãs:
