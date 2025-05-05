@@ -10,7 +10,7 @@ const HomePage: React.FC = () => {
       <img 
         src="https://upload.wikimedia.org/wikipedia/pt/f/f9/Furia_Esports_logo.png"
         alt="Furia Background"
-        className="absolute inset-0 w-full h-full object-contain opacity-10 pointer-events-none select-none"
+        className="absolute inset-0 w-full h-full object-contain opacity-50 pointer-events-none select-none"
       />
 
       <div className="relative max-w-2xl space-y-8 animate-fade-in">
