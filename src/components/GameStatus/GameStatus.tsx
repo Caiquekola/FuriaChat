@@ -33,12 +33,12 @@ const GameStatus: React.FC = () => {
         tournament: "ESL Pro League",
         team1: {
           name: "FURIA",
-          logo: "https://upload.wikimedia.org/wikipedia/en/5/57/FURIA_Esports_logo.png",
+          logo: "https://en.wikipedia.org/wiki/File:Furia_Esports_logo.png",
           score: 0
         },
         team2: {
           name: "NAVI",
-          logo: "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg",
+          logo: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Natus_Vincere_logo.png",
           score: 0
         },
         map: "Inferno",
@@ -50,12 +50,12 @@ const GameStatus: React.FC = () => {
         tournament: "BLAST Premier",
         team1: {
           name: "FURIA",
-          logo: "https://upload.wikimedia.org/wikipedia/en/5/57/FURIA_Esports_logo.png",
+          logo: "https://en.wikipedia.org/wiki/File:Furia_Esports_logo.png",
           score: 0
         },
         team2: {
           name: "G2 Esports",
-          logo: "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg",
+          logo: "https://upload.wikimedia.org/wikipedia/pt/2/23/G2_Esports_logo.png",
           score: 0
         },
         map: "Nuke",
@@ -67,12 +67,12 @@ const GameStatus: React.FC = () => {
         tournament: "IEM Cologne",
         team1: {
           name: "FURIA",
-          logo: "https://upload.wikimedia.org/wikipedia/en/5/57/FURIA_Esports_logo.png",
+          logo: "https://en.wikipedia.org/wiki/File:Furia_Esports_logo.png",
           score: 0
         },
         team2: {
           name: "Vitality",
-          logo: "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg",
+          logo: "https://lol.fandom.com/wiki/Team_Vitality#/media/File:Team_Vitalitylogo_square.png",
           score: 0
         },
         map: "Ancient",
