@@ -1,8 +1,8 @@
-# 🖤 FURIA FAN CHAT
+#  FURIA FAN CHAT 🖤
 
 Uma plataforma interativa em tempo real desenvolvida para aproximar a torcida da FURIA Esports!
 
-## 🎯 Visão Geral
+##  Visão Geral 🎯
 
 O **FURIA FAN CHAT** oferece uma experiência única para fãs:
 
@@ -10,39 +10,44 @@ O **FURIA FAN CHAT** oferece uma experiência única para fãs:
 - **Chat por Partidas** para debater os jogos em andamento
 - **Agenda de Jogos** simulada para acompanhar partidas futuras
 - **Sistema de Usuário** com login rápido e avatar personalizado
-- **Mensagens salvas** no backend para manter histórico e continuidade
 
-Nosso foco é criar uma comunidade engajada onde os fãs:
+
+Criamos uma comunidade engajada onde os fãs:
 
 ✅ Conversam ao vivo  
-✅ Acompanham partidas em andamento  
+✅ Acompanham partidas em andamento 
 ✅ Interagem com outros torcedores em tempo real
 
----
 
 ## 🧩 Estrutura do Projeto
 
 /backend
+
 ├── controller
+
 ├── model
+
 ├── repository
+
 ├── service
-└── WebSocketConfig.java
+
+└── App.java
 
 /frontend (React + Vite)
+
 ├── components
+
 │ ├── Chat (ChatHeader, MessageList, MessageItem, MessageInput)
+
 │ ├── GameStatus (LiveMatch, GameStatus)
+
 │ ├── Navbar (Menu e Navegação)
+
 │ └── Modal (AuthModal, ProfileModal)
+
 ├── pages (HomePage, MatchesPage, MatchChat)
+
 └── services (WebSocketService.ts)
-
-yaml
-Copy
-Edit
-
----
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -50,7 +55,6 @@ Edit
 
 - **React + Vite**
 - **TailwindCSS**
-- **React Router**
 - **Lucide React Icons**
 - **Emoji Picker**
 - **React Hot Toast**
@@ -58,7 +62,7 @@ Edit
 ### Backend
 
 - **Spring Boot (API REST + WebSockets + JPA)**
-- **Banco de Dados (H2 / PostgreSQL / MySQL)**
+- **Banco de Dados (PostgreSQL)**
 - **WebSocket (STOMP + SockJS)**
 
 ### Hospedagem
@@ -141,15 +145,7 @@ O backend recebe, armazena e transmite as mensagens para todos os conectados.
 
 ---
 
-## 📌 Resumo para Apresentação
-
-> O **FURIA FAN CHAT** conecta a torcida da FURIA para criar uma experiência única em dias de jogo.  
-> Usando **React, Spring Boot e WebSockets**, fãs podem interagir em tempo real no Chat Global e em partidas específicas.  
-> Mensagens são armazenadas no backend, garantindo histórico e continuidade.  
-> Este é o lugar para vibrar, discutir e viver a emoção dos jogos da FURIA junto da comunidade!
-
----
 
 ## 👨‍💻 Desenvolvido por
 
-**[Seu Nome]** - apaixonado por tecnologia e fã da FURIA.
+[Caique Augusto](http://www.linkedin.com/in/caique-augusto-braga "Caique Augusto") - apaixonado por tecnologia, jogos competitivos e fã da FURIA.
